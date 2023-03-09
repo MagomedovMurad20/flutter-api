@@ -1,19 +1,22 @@
+import 'package:jsonapi/models/adress.dart';
+import 'package:jsonapi/models/company.dart';
+
 class User {
   final int id;
   final String name;
   final String username;
   final String email;
-  final String adress;
   final String website;
   final String phone;
-  final String company;
+  final Address address;
+  final Company company;
 
   User({
     required this.id,
     required this.name,
     required this.username,
     required this.email,
-    required this.adress,
+    required this.address,
     required this.website,
     required this.phone,
     required this.company,
@@ -24,10 +27,10 @@ class User {
       name: json['name'],
       username: json['username'],
       email: json['email'],
-      adress: json['adress'],
-      website: json['website'],
       phone: json['phone'],
-      company: json['company'],
+      website: json['website'],
+      company: Company.fromJson(json['company']),
+      address: Address.fromJson(json['address']),
     );
   }
 }
