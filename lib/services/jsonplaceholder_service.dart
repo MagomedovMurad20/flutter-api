@@ -1,38 +1,50 @@
-import 'package:jsonapi/models/album.dart';
-import 'package:jsonapi/models/post.dart';
-import 'package:jsonapi/models/user.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-Future<User> fetchUsers() async {
-  final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
+import 'package:jsonapi/models/user.dart';
+import 'package:jsonapi/models/post.dart';
+import 'package:jsonapi/models/album.dart';
 
-  if (response.statusCode == 200) {
-    return User.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load users');
+class JsonplaceholderService {
+  static Future<List<User>> fetchUsers() async {
+    final response =
+        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
+
+    if (response.statusCode == 200) {
+      List<User> users;
+      var json = jsonDecode(response.body);
+      users = List<User>.from(json.map((x) => User.fromJson(x)));
+      return users;
+    } else {
+      throw Exception('Failed to load users list');
+    }
   }
-}
 
-Future<Album> fetchAlbums() async {
-  final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums'));
+  static Future<List<Post>> fetchUserPosts(int userId) async {
+    final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/users/$userId/posts'));
 
-  if (response.statusCode == 200) {
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load albums');
+    if (response.statusCode == 200) {
+      List<Post> posts;
+      var json = jsonDecode(response.body);
+      posts = List<Post>.from(json.map((x) => Post.fromJson(x)));
+      return posts;
+    } else {
+      throw Exception('Failed to load posts list');
+    }
   }
-}
 
-Future<Post> fetchPosts() async {
-  final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+  static Future<List<Album>> fetchUserAlbums(int userId) async {
+    final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/users/$userId/albums'));
 
-  if (response.statusCode == 200) {
-    return Post.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load posts');
+    if (response.statusCode == 200) {
+      List<Album> albums;
+      var json = jsonDecode(response.body);
+      albums = List<Album>.from(json.map((x) => Album.fromJson(x)));
+      return albums;
+    } else {
+      throw Exception('Failed to load albums list');
+    }
   }
 }
